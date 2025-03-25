@@ -31,3 +31,12 @@ class Applications(rx.Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+class Pods(rx.Base):
+    name: str = ""
+    status: str = ""
+    namespace: str = ""
+    parent: str = ""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)

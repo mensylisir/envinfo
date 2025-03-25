@@ -7,6 +7,10 @@ from ..components.form_field import form_field
 from ..components.header_cell import header_cell
 
 def _show_templates(tp: Template):
+    print("类型判断：")
+    print(f"emp 类型: {type(tp)}")
+    print(f"Employee 类型: {Template}")
+    print(isinstance(tp, Template))
     """Show a customer in a table row."""
     return rx.table.row(
         rx.table.row_header_cell(tp.name),

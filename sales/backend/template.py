@@ -13,6 +13,7 @@ class TemplateState(rx.State):
     current_template: Template = Template()
     templates: list[Template] = []
     def load_entries(self):
+        print(f"templates: {type(self.templates)}")
         self.get_templates()
 
     def get_template(self, tp: Template):

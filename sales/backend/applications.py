@@ -36,7 +36,7 @@ class ApplicationsState(rx.State):
         for item in data.items:
             application = Applications()
             application.name = item.metadata.name
-            application.namespace = item.metadata.namespace
+            application.namespace = item.spec.destination.namespace
             application.description = ""
             application.action = "view"
             self.applications += [application]
@@ -50,7 +50,7 @@ class ApplicationsState(rx.State):
         for item in data.items:
             application = Applications()
             application.name = item.metadata.name
-            application.namespace = item.metadata.namespace
+            application.namespace = item.spec.destination.namespace
             application.description = ""
             application.action = "view"
             namespace = item.spec.destination.namespace

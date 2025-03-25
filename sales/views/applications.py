@@ -3,6 +3,7 @@ from sales.views.navbar import navbar
 from ..components.header_cell import header_cell
 from ..backend.applications import ApplicationsState
 from ..backend.models import Applications
+from sales.backend.pods import PodsState
 
 
 @rx.page(route='/applications/[appset_name]')
@@ -26,8 +27,15 @@ def app_index() -> rx.Component:
 def _show_applications(app: Applications):
 
     return rx.table.row(
-        rx.table.row_header_cell(app.name),
+        # rx.table.row_header_cell(app.name),
         # rx.table.cell(app.namespace),
+        rx.table.row_header_cell(
+            rx.link(
+                app.name,
+                href=f"/namespaces/{app.namespace}/applications/{app.name}",
+                on_click=PodsState.list_pods_by_app(app.namespace, app.name)
+            )
+        ),
         rx.table.cell(
             rx.text(app.address, style={"whiteSpace": "pre-wrap"})
         ),
@@ -42,7 +50,7 @@ def _show_applications(app: Applications):
         rx.table.cell(
             rx.hstack(
                 rx.cond(
-                    ~app.show_password,  # 使用位运算符取反
+                    ~app.show_password,
                     rx.input(
                         type="password",
                         value=app.password,
