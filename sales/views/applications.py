@@ -47,18 +47,28 @@ def _show_applications(app: Applications):
                         type="password",
                         value=app.password,
                         disabled=True,
+                        style={
+                            "width": "200px",
+                            "padding-right": "3em",
+                            "boxSizing": "border-box",
+                        },
                     ),
                     rx.input(
                         type="text",
                         value=app.password,
                         disabled=True,
+                        style={
+                            "width": "200px",
+                            "padding-right": "3em",
+                            "boxSizing": "border-box",
+                        },
                     )
                 ),
                 rx.button(
                     rx.cond(
                         ~app.show_password,  # 使用位运算符取反
-                        rx.icon("eye"),
-                        rx.icon("eye-off")
+                        rx.icon("eye", color="#777"),
+                        rx.icon("eye-off", color="#777")
                     ),
                     on_click=lambda: ApplicationsState.toggle_password(app),
                     color_scheme="blue",
@@ -66,24 +76,19 @@ def _show_applications(app: Applications):
                         "border": "none",
                         "padding": "0.2em",
                         "background": "none",
-                        "width": "2em",
-                        "height": "2em",
-                        "color": "#0090ff",
                     },
                 ),
                 rx.button(
-                    rx.icon("copy"),
+                    rx.icon("copy", color="#777"),
                     on_click=lambda: ApplicationsState.copy_to_clipboard(app.password),
                     style={
                         "border": "none",
                         "padding": "0.2em",
                         "background": "none",
-                        "width": "2em",
-                        "height": "2em",
-                        "color": "#0090ff",
                     },
                 ),
                 style={
+                    "position": "relative",
                     "border": "0px solid #ccc",
                     "border_radius": "4px",
                     "align_items": "center",
