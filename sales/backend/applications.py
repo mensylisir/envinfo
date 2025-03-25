@@ -9,10 +9,24 @@ from sales.appset.monitor import get_monitor
 from sales.utils.json import json_to_object
 from .models import Applications
 from .models import ApplicationSets
+import pyperclip
 
 
 class ApplicationsState(rx.State):
+    app: Applications | None = None
+    # appset_name: str = ""
     applications: list[Applications] = []
+
+    @rx.event
+    def copy_to_clipboard(self, text):
+        pyperclip.copy(text)
+        return rx.window_alert("已复制到剪贴板")
+    @rx.event
+    def toggle_password(self, app: Applications):
+        for index, app_in_state in enumerate(self.applications):
+            if app_in_state.name == app.name:
+                self.applications[index].show_password = not self.applications[index].show_password
+                break
 
     def list_applications(self):
         result = get_applications()

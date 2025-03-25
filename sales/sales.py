@@ -40,18 +40,18 @@ app.add_page(
     description="Template Pages",
 )
 
-app.add_page(
-    appset_index,
-    route="/applicationsets",
-    on_load=ApplicationSetsState.list_applicationsets,
-    title="Appset Pages",
-    description="Appset Pages",
-)
-
-app.add_page(
-    app_index,
-    route="/applications",
-    on_load=ApplicationsState.list_applications,
-    title="App Pages",
-    description="App Pages",
-)
+# app.add_page(
+#     appset_index,
+#     route="/applicationsets",
+#     on_load=ApplicationSetsState.list_applicationsets,
+#     title="Appset Pages",
+#     description="Appset Pages",
+# )
+#
+# app.add_page(
+#     app_index,
+#     route="/applications",
+#     on_load=ApplicationsState.list_applications,
+#     title="App Pages",
+#     description="App Pages",
+# )

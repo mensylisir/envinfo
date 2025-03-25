@@ -24,6 +24,7 @@ class ApplicationSetsState(rx.State):
         json_data = object_to_json(result)
         # print(json_data)
         create_applicationset(json_data)
+        # return rx.redirect(f"/applications/{form_data['Name']}")
 
     def list_applicationsets(self):
         result = get_applicationsets()

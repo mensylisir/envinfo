@@ -23,7 +23,6 @@ def app_index() -> rx.Component:
         padding_y=["1em", "1em", "2em"],
     )
 
-
 def _show_applications(app: Applications):
 
     return rx.table.row(
@@ -33,11 +32,64 @@ def _show_applications(app: Applications):
             rx.text(app.address, style={"whiteSpace": "pre-wrap"})
         ),
         rx.table.cell(app.username),
+        # rx.table.cell(
+        #     rx.input(
+        #         type="text",
+        #         value=app.password,
+        #         disabled=False,
+        #     )
+        # ),
         rx.table.cell(
-            rx.input(
-                type="text",
-                value=app.password,
-                disabled=False,
+            rx.hstack(
+                rx.cond(
+                    ~app.show_password,  # 使用位运算符取反
+                    rx.input(
+                        type="password",
+                        value=app.password,
+                        disabled=True,
+                    ),
+                    rx.input(
+                        type="text",
+                        value=app.password,
+                        disabled=True,
+                    )
+                ),
+                rx.button(
+                    rx.cond(
+                        ~app.show_password,  # 使用位运算符取反
+                        rx.icon("eye"),
+                        rx.icon("eye-off")
+                    ),
+                    on_click=lambda: ApplicationsState.toggle_password(app),
+                    color_scheme="blue",
+                    style={
+                        "border": "none",
+                        "padding": "0.2em",
+                        "background": "none",
+                        "width": "2em",
+                        "height": "2em",
+                        "color": "#0090ff",
+                    },
+                ),
+                rx.button(
+                    rx.icon("copy"),
+                    on_click=lambda: ApplicationsState.copy_to_clipboard(app.password),
+                    style={
+                        "border": "none",
+                        "padding": "0.2em",
+                        "background": "none",
+                        "width": "2em",
+                        "height": "2em",
+                        "color": "#0090ff",
+                    },
+                ),
+                style={
+                    "border": "0px solid #ccc",
+                    "border_radius": "4px",
+                    "align_items": "center",
+                    "padding": "0.2em",
+                    "width": "auto",
+                }
             )
         ),
         rx.table.cell(
