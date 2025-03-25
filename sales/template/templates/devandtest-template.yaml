@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: devandtest-template
+  namespace: argocd-system
+  labels:
+    app.kubernetes.io/from-template: "devandtest-template"
+  annotations:
+    app.kubernetes.io/description: "提供gitlab、harbor、jenkins、sonarqube等中间件，为开发测试平台提供快速部署模板"
+    app.kubernetes.io/alias_name: "开发测试平台模板"
+spec:
+  generators:
+    - list:
+        elements:
+          - name: argocd-instance
+            chart: argo-cd
+            version: 5.29.2
+            installCRDs: "false"
+          - name: harbor-instance
+            chart: harbor
+            version: 1.14.4
+            installCRDs: "true"
+          - name: jenkins-instance
+            chart: jenkins
+            version: 5.1.15
+            installCRDs: "true"
+          - name: gitlab-instance
+            chart: gitlab
+            version: 7.8.0
+            installCRDs: "true"
+          - name: postgresql-instance
+            chart: postgresql
+            version: 15.2.3
+            installCRDs: "true"
+          - name: sonarqube-instance
+            chart: sonarqube
+            version: 3.0.2+296
+            installCRDs: "true"
+          - name: minio-instance
+            chart: minio
+            version: 0.2.1
+            installCRDs: "true"
+          - name: grafana-instance
+            chart: grafana
+            version: 0.2.0
+            installCRDs: "true"
+          - name: dbgate-instance
+            chart: dbgate
+            version: 1.0.0
+            installCRDs: "true"
+  template:
+    metadata:
+      name: "{{name}}"
+      labels:
+        environment: "prod"
+        app.kubernetes.io/created-by: "test-applications"
+    spec:
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: devandtest
+      project: default
+      source:
+        repoURL: http://registry.dev.rdev.tech:18091/repository/helm-cars/
+        targetRevision: "{{version}}"
+        chart: "{{chart}}"
+        helm:
+          releaseName: "{{name}}"
+          parameters:
+            - name: installCRDs
+              value: "{{installCRDs}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
