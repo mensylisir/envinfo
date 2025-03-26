@@ -20,7 +20,6 @@ def get_pods(namespace, app_name):
             message=""
         )
     except requests.exceptions.RequestException as e:
-        print("请求出错：", e)
         return HttpResponse(
             code=500,
             status="fail",
@@ -39,7 +38,6 @@ def get_pod_logs(namespace, pod_name):
             message=""
         )
     except requests.exceptions.RequestException as e:
-        print("请求出错：", e)
         return HttpResponse(
             code=500,
             data="",

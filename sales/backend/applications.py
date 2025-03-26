@@ -31,7 +31,6 @@ class ApplicationsState(rx.State):
     def list_applications(self):
         result = get_applications()
         data = json_to_object(result.data)
-        print('#################################################################')
         self.applications = []
         for item in data.items:
             application = Applications()
@@ -44,7 +43,6 @@ class ApplicationsState(rx.State):
     async def list_applications_by_appset(self, appset):
         result = get_applications_by_appset(appset)
         data = json_to_object(result.data)
-        print('#################################################################')
         self.applications = []
         tasks = []
         for item in data.items:

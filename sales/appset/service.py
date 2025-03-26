@@ -28,7 +28,6 @@ class AccessUrl:
 
 async def get_service_url(namespace: str, instance_name: str):
     info = get_relation_info(instance_name)
-    print(info)
     if info["service"].startswith("-"):
         service_name = f'{namespace}{info["service"]}'
     else:
@@ -49,9 +48,7 @@ async def get_service_url(namespace: str, instance_name: str):
                         accessUrl.name = "-"
                     accessUrl.ip = response.spec.clusterIP
                     accessUrl.port = res.port
-                    print(accessUrl)
                     acessUrls.append(accessUrl)
-                print([str(url) for url in acessUrls])
                 return HttpResponse(
                     code=200,
                     status="success",
@@ -59,7 +56,6 @@ async def get_service_url(namespace: str, instance_name: str):
                     message=""
                 )
     except aiohttp.ClientError as e:
-        print("请求出错：", e)
         return HttpResponse(
             code=500,
             status="fail",

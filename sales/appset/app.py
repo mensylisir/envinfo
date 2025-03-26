@@ -12,7 +12,6 @@ def get_applications():
     try:
         with requests.get(url, headers=headers, verify=False) as response:
             response.raise_for_status()
-            # print("请求成功，响应内容：", response.json())
             return HttpResponse(
                 code=200,
                 status="success",
@@ -20,7 +19,6 @@ def get_applications():
                 message=""
             )
     except requests.exceptions.RequestException as e:
-            print("请求出错：", e)
             return HttpResponse(
                 code=500,
                 status="fail",
@@ -30,7 +28,6 @@ def get_applications():
 
 def get_applications_by_appset(appset_name):
     url = f"https://172.30.1.12:6443/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applications?labelSelector=app.kubernetes.io/created-by%3D{appset_name}"
-    print(url)
     try:
         with requests.get(url, headers=headers, verify=False) as response:
             response.raise_for_status()
@@ -41,7 +38,6 @@ def get_applications_by_appset(appset_name):
                 message=""
             )
     except requests.exceptions.RequestException as e:
-            print("请求出错：", e)
             return HttpResponse(
                 code=500,
                 status="fail",

@@ -19,7 +19,6 @@ class UserInfo:
 
 async def get_secret(namespace: str, instance_name: str):
     info = get_relation_info(instance_name)
-    print(info)
     userInfo = UserInfo()
     if info["secret"] == "":
         userInfo.user = info["user"]
@@ -48,7 +47,6 @@ async def get_secret(namespace: str, instance_name: str):
                     decoded_password = base64.b64decode(encoded_password).decode('utf-8')
                     userInfo.password = decoded_password
                 except (KeyError, TypeError):
-                    print(f"无法获取 {password_key} 信息")
                     return HttpResponse(
                         code=500,
                         status="fail",
@@ -61,7 +59,6 @@ async def get_secret(namespace: str, instance_name: str):
                     message=""
                 )
     except aiohttp.ClientError as e:
-        print("请求出错：", e)
         return HttpResponse(
             code=500,
             status="fail",

@@ -36,7 +36,7 @@ def json_to_object(json_content):
         data = json.loads(json_content)
         return DictToObject(data)
     except json.JSONDecodeError as e:
-        print(f"解析 JSON 时出错: {e}")
+        print(f"转换为 JSON 时出错: {e}")
         return None
 
 
