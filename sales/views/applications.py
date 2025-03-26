@@ -27,8 +27,6 @@ def app_index() -> rx.Component:
 def _show_applications(app: Applications):
 
     return rx.table.row(
-        # rx.table.row_header_cell(app.name),
-        # rx.table.cell(app.namespace),
         rx.table.row_header_cell(
             rx.link(
                 app.name,
@@ -40,13 +38,6 @@ def _show_applications(app: Applications):
             rx.text(app.address, style={"whiteSpace": "pre-wrap"})
         ),
         rx.table.cell(app.username),
-        # rx.table.cell(
-        #     rx.input(
-        #         type="text",
-        #         value=app.password,
-        #         disabled=False,
-        #     )
-        # ),
         rx.table.cell(
             rx.hstack(
                 rx.cond(

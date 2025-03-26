@@ -73,3 +73,4 @@ class ApplicationsState(rx.State):
             if user.data is not None:
                 application.username = user.data.user
                 application.password = user.data.password
+

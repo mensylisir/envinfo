@@ -10,7 +10,6 @@ def _show_templates(tp: Template):
     return rx.table.row(
         rx.table.row_header_cell(tp.alias_name),
         rx.table.cell(tp.description),
-        # rx.table.cell(tp.action),
         rx.table.cell(
             rx.dialog.root(
                 rx.dialog.trigger(
@@ -18,8 +17,6 @@ def _show_templates(tp: Template):
                         rx.icon("briefcase", size=18),
                         rx.text(tp.action),
                         color_scheme="blue",
-                        # on_click=State.create_application(tp),
-                        # loading=State.gen_response,
                         style={
                             "margin_right": "1em",
                         },
@@ -107,16 +104,16 @@ def _create_application_from_template(tp_name: str) -> rx.Component:
                 on_submit=ApplicationSetsState.create_applicationset,
                 reset_on_submit=False,
             ),
-            padding="20px",  # 内边距
-            background_color="white",  # 背景色
+            padding="20px",
+            background_color="white",
             border=f"2px solid {rx.color('accent', 7)}",
             border_radius="15px",  # 圆角
-            box_shadow="0 4px 8px rgba(0, 0, 0, 0.1)",  # 阴影
+            box_shadow="0 4px 8px rgba(0, 0, 0, 0.1)",
         ),
         width="100%",
         max_width="450px",
         justify=["end", "end", "start"],
-        padding="0",  # 移除对话框内容的额外空白
+        padding="0",
     )
 
 
