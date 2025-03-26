@@ -2,6 +2,7 @@ import json
 
 import reflex as rx
 from .models import ApplicationSets
+from sales.backend.applications import ApplicationsState
 from sales.template.manager import template_manager
 from sales.utils.json import json_to_object
 from sales.utils.json import object_to_json
@@ -22,6 +23,8 @@ class ApplicationSetsState(rx.State):
                 element.name = form_data["Namespace"] + "-" + element.name
         json_data = object_to_json(result)
         create_applicationset(json_data)
+        yield rx.redirect(f"/applications/{form_data['Name']}")
+        yield ApplicationsState.list_applications_by_appset(form_data["Name"])
 
     def list_applicationsets(self):
         result = get_applicationsets()

@@ -7,7 +7,6 @@ from ..components.form_field import form_field
 from ..components.header_cell import header_cell
 
 def _show_templates(tp: Template):
-    """Show a customer in a table row."""
     return rx.table.row(
         rx.table.row_header_cell(tp.alias_name),
         rx.table.cell(tp.description),
@@ -46,78 +45,78 @@ def _show_templates(tp: Template):
 
 def _create_application_from_template(tp_name: str) -> rx.Component:
     return rx.dialog.content(
-        rx.flex(
+        rx.box(
             rx.form.root(
-                rx.flex(
-                    rx.vstack(
-                        form_field(
-                            "Name",
-                            "Application Name",
-                            "text",
-                            "Name",
-                            "user"
-                        ),
-                        form_field(
-                            "Namespace",
-                            "Application Namespace",
-                            "text",
-                            "Namespace",
-                            "map-pinned"
-                        ),
-                        rx.form.field(
-                            rx.flex(
-                                rx.vstack(
-                                    rx.form.control(
-                                        rx.input(
-                                            type="text",
-                                            default_value=tp_name,
-                                            value=tp_name,
-                                            style={"width": "100%", "display": "none", "margin": "-2em", "padding": "-4em"},
-                                        ),
-                                        as_child=True,
-                                    ),
-                                ),
-                            ),
-                            align="center",
-                            name="Template",
-                            style={"width": "100%", "display": "none", "margin": "-2em", "padding": "-4em"},
-                        ),
-                        style={"width": "100%"},
+                rx.vstack(
+                    # 对话框标题
+                    rx.heading("创建应用", font_size="20px", color="blue.500", margin_bottom="10px"),
+                    # 应用名称输入框
+                    form_field(
+                        "Name",
+                        "Application Name",
+                        "text",
+                        "Name",
+                        "user"
                     ),
-                ),
-                rx.flex(
-                    rx.dialog.close(
-                        rx.button(
-                            "Close",
-                            variant="soft",
-                            color_scheme="gray",
-                        ),
+                    # 命名空间输入框
+                    form_field(
+                        "Namespace",
+                        "Application Namespace",
+                        "text",
+                        "Namespace",
+                        "map-pinned"
                     ),
-                    rx.form.submit(
+                    # 隐藏的模板名称输入框
+                    rx.form.field(
+                        rx.input(
+                            type="text",
+                            default_value=tp_name,
+                            value=tp_name,
+                            display="none",
+                            name="Template"
+                        ),
+                        name="Template"
+                    ),
+                    # 按钮容器
+                    rx.hstack(
+                        # 关闭按钮
                         rx.dialog.close(
                             rx.button(
-                                "Submit",
+                                "Close",
+                                variant="soft",
+                                color_scheme="gray",
+                                padding_x="15px",
+                                padding_y="8px",
+                                border_radius="5px",
                             ),
                         ),
-                        as_child=True,
+                        # 提交按钮
+                        rx.form.submit(
+                            rx.button(
+                                "Submit",
+                                color_scheme="blue",
+                                padding_x="15px",
+                                padding_y="8px",
+                                border_radius="5px",
+                            ),
+                        ),
+                        justify="end",
+                        margin_top="15px",
                     ),
-                    padding_top="2em",
-                    spacing="3",
-                    mt="1",
-                    justify="end",
                 ),
                 on_submit=ApplicationSetsState.create_applicationset,
                 reset_on_submit=False,
             ),
-            style={"width": "100%"},
-            direction="column",
-            spacing="4",
+            padding="20px",  # 内边距
+            background_color="white",  # 背景色
+            border=f"2px solid {rx.color('accent', 7)}",
+            border_radius="15px",  # 圆角
+            box_shadow="0 4px 8px rgba(0, 0, 0, 0.1)",  # 阴影
         ),
         width="100%",
         max_width="450px",
         justify=["end", "end", "start"],
-        border=f"2.5px solid {rx.color('accent', 7)}",
-        border_radius="25px",
+        padding="0",  # 移除对话框内容的额外空白
     )
 
 
