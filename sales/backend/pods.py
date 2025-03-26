@@ -7,8 +7,25 @@ from .models import Pods
 
 class PodsState(rx.State):
     pods: list[Pods] = []
+
+    @rx.var
+    def get_cluster_name(self) -> str:
+        return self.router.page.params.get("cluster_name", "")
+
+    @rx.var
+    def get_template_name(self) -> str:
+        return self.router.page.params.get("template_name", "")
+
+    @rx.var
+    def get_appset_name(self) -> str:
+        return self.router.page.params.get("appset_name", "")
+
+    @rx.var
+    def get_app_name(self) -> str:
+        return self.router.page.params.get("app_name", "")
+
     def list_pods(self, namesppace, app_name):
-        result = get_pods(namesppace, app_name)
+        result = get_pods(self.get_cluster_name, namesppace)
         data = json_to_object(result.data)
         self.pods = []
         for item in data.items:
@@ -19,7 +36,7 @@ class PodsState(rx.State):
             self.pods += [pod]
 
     def list_pods_by_app(self, namesppace, app_name):
-        result = get_pods(namesppace, app_name)
+        result = get_pods(self.get_cluster_name, namesppace)
         data = json_to_object(result.data)
         self.pods = []
         for item in data.items:

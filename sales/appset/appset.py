@@ -1,14 +1,17 @@
 import requests
 import urllib3
+from sales.backend.template import TemplateState
 
 from sales.response.http_response import HttpResponse
+from sales.config.config import wrapped_config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-headers = {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InZBWUppaENWVWVRcWN0Ykw5ZHhBSGktRE5ndnFTNk5UZ0xiLWtlWFM5eVUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJ0YWljaHUtYWRtaW4iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoidGFpY2h1LWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiODVmYWNmMGUtMTg4MC00NDc5LTkwNWQtNzQyNTEyZjQ0MjM1Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOnRhaWNodS1hZG1pbiJ9.AycjOnhp2_7DweD6tqmD5PkWzs1Gl0_1af1uBdbcFnWcb6bP5BYaaqScntGQ4GXmfuXzJe2xkH2nVDUJDhNv8dEvcliHoAidRYY69A4OqopN75HZZp_nqoK_jXyRfFbs9AdrCkjJ3mL6NPkh_3sastGFas6-vpNZq1TPGqc8OJmKYDPCqwBahAWywp40nqOA7tcfDOKervGEZEWlMIncFGPM0H8Nv1DbywEEERE9eDw1zLfPBJ4aStgimGRRO0cC8mHU0mvt5ogZnhvkQvw9wgz6w5EgqmEujAMZGoWIWklG0lge8f0Xz3U0wgjIxkISzl38XHvDtAJQEWULogJVfA"
-}
-def get_applicationsets():
-    url = "https://172.30.1.12:6443/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
+
+def get_applicationsets(cluster_name):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+    }
+    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
     try:
         with requests.get(url, headers=headers, verify=False) as response:
             response.raise_for_status()
@@ -25,8 +28,12 @@ def get_applicationsets():
                 message=str(e)
             )
 
-def get_applicationsets_by_template(template_name):
-    url = f"https://172.30.1.12:6443/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets?labelSelector=app.kubernetes.io/from-template%3D{template_name}"
+def get_applicationsets_by_template(cluster_name, template_name):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+    }
+    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets?labelSelector=app.kubernetes.io/from-template%3D{template_name}"
     try:
         with requests.get(url, headers=headers, verify=False) as response:
             response.raise_for_status()
@@ -43,14 +50,16 @@ def get_applicationsets_by_template(template_name):
                 message=str(e)
             )
 
-def create_applicationset(data):
-    url = "https://172.30.1.12:6443/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
-    # 如果 data 是字符串，先将其转换为字典
+def create_applicationset(cluster_name, data):
+    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+    }
     if isinstance(data, str):
         import json
         data = json.loads(data)
     try:
-        # 每次请求都关闭连接
         with requests.post(url, json=data, headers=headers, verify=False, timeout=10) as response:
             response.raise_for_status()
             return HttpResponse(
@@ -60,6 +69,7 @@ def create_applicationset(data):
                 message=""
             )
     except requests.exceptions.RequestException as e:
+        print(str(e))
         return HttpResponse(
             code=500,
             status="fail",

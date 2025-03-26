@@ -8,7 +8,6 @@ from sales.appset.secret import get_secret
 from sales.appset.monitor import get_monitor
 from sales.utils.json import json_to_object
 from .models import Applications
-from .models import ApplicationSets
 import pyperclip
 
 
@@ -16,6 +15,18 @@ class ApplicationsState(rx.State):
     app: Applications | None = None
     # appset_name: str = ""
     applications: list[Applications] = []
+
+    @rx.var
+    def get_cluster_name(self) -> str:
+        return self.router.page.params.get("cluster_name", "")
+
+    @rx.var
+    def get_template_name(self) -> str:
+        return self.router.page.params.get("template_name", "")
+
+    @rx.var
+    def get_appset_name(self) -> str:
+        return self.router.page.params.get("appset_name", "")
 
     @rx.event
     def copy_to_clipboard(self, text):
@@ -29,7 +40,7 @@ class ApplicationsState(rx.State):
                 break
 
     def list_applications(self):
-        result = get_applications()
+        result = get_applications(self.get_cluster_name)
         data = json_to_object(result.data)
         self.applications = []
         for item in data.items:
@@ -41,7 +52,7 @@ class ApplicationsState(rx.State):
             self.applications += [application]
 
     async def list_applications_by_appset(self, appset):
-        result = get_applications_by_appset(appset)
+        result = get_applications_by_appset(self.get_cluster_name, appset)
         data = json_to_object(result.data)
         self.applications = []
         tasks = []
@@ -54,8 +65,8 @@ class ApplicationsState(rx.State):
             namespace = item.spec.destination.namespace
             name = application.name
             application.monitor = get_monitor(namespace, name)
-            service_task = get_service_url(namespace, name)
-            secret_task = get_secret(namespace, name)
+            service_task = get_service_url(self.get_cluster_name, namespace, name)
+            secret_task = get_secret(self.get_cluster_name, namespace, name)
             tasks.append((application, service_task, secret_task))
 
         for application, service_task, secret_task in tasks:

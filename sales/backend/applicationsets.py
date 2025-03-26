@@ -12,9 +12,19 @@ from sales.appset.appset import get_applicationsets_by_template
 from .models import Template
 class ApplicationSetsState(rx.State):
     applicationsets: list[ApplicationSets] = []
+
+    @rx.var
+    def get_cluster_name(self) -> str:
+        return self.router.page.params.get("cluster_name", "")
+
+    @rx.var
+    def get_template_name(self) -> str:
+        return self.router.page.params.get("template_name", "")
+
     def create_applicationset(self,form_data: dict):
         data = template_manager._cache[form_data["Template"]]
         result = json_to_object(json.dumps(data))
+        self.get_template_name = result.metadata.name
         result.metadata.name = form_data["Name"]
         result.spec.template.spec.destination.namespace = form_data["Namespace"]
         result.spec.template.metadata.labels["app.kubernetes.io/created-by"] = form_data["Name"]
@@ -22,12 +32,13 @@ class ApplicationSetsState(rx.State):
             for element in generator.list.elements:
                 element.name = form_data["Namespace"] + "-" + element.name
         json_data = object_to_json(result)
-        create_applicationset(json_data)
-        yield rx.redirect(f"/applications/{form_data['Name']}")
+        create_applicationset(self.get_cluster_name, json_data)
+        # yield rx.redirect(f"/applications/{form_data['Name']}")
+        yield rx.redirect(f"/clusters/{self.get_cluster_name}/templates/{self.get_template_name}/applicationsets/{form_data['Name']}/applications")
         yield ApplicationsState.list_applications_by_appset(form_data["Name"])
 
     def list_applicationsets(self):
-        result = get_applicationsets()
+        result = get_applicationsets(self.get_cluster_name)
         data = json_to_object(result.data)
         self.applicationsets = []
         for item in data.items:
@@ -40,7 +51,7 @@ class ApplicationSetsState(rx.State):
 
 
     def list_applicationsets_by_template(self, template: Template):
-        result = get_applicationsets_by_template(template.name)
+        result = get_applicationsets_by_template(self.get_cluster_name, template.name)
         data = json_to_object(result.data)
         self.applicationsets = []
         for item in data.items:

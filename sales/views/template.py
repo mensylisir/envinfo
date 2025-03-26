@@ -5,7 +5,25 @@ from ..backend.template import TemplateState
 from ..backend.applicationsets import ApplicationSetsState
 from ..components.form_field import form_field
 from ..components.header_cell import header_cell
+from .navbar import navbar
 
+@rx.page("/clusters/[cluster_name]/templates", on_load=TemplateState.load_entries)
+def template_index() -> rx.Component:
+    return rx.vstack(
+        navbar("环境管理->模板管理"),
+        rx.flex(
+            rx.box(main_table(), width=["100%", "100%", "100%", "100%"]),
+            spacing="6",
+            width="100%",
+            flex_direction=["column", "column", "column", "row"],
+        ),
+        height="100vh",
+        bg=rx.color("accent", 1),
+        width="100%",
+        spacing="6",
+        padding_x=["1.5em", "1.5em", "3em"],
+        padding_y=["1em", "1em", "2em"],
+    )
 def _show_templates(tp: Template):
     return rx.table.row(
         rx.table.row_header_cell(tp.alias_name),
@@ -32,7 +50,8 @@ def _show_templates(tp: Template):
                     on_click=ApplicationSetsState.list_applicationsets_by_template(tp),
                     # loading=State.gen_response,
                 ),
-                href=f"/applicationsets/{tp.name}",
+                # href=f"/applicationsets/{tp.name}",
+                href=f"/clusters/{TemplateState.get_cluster_name}/templates/{tp.name}/applicationsets"
             ),
         ),
         style={"_hover": {"bg": rx.color("accent", 2)}},

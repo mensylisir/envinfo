@@ -6,7 +6,7 @@ from ..backend.models import Applications
 from sales.backend.pods import PodsState
 
 
-@rx.page(route='/applications/[appset_name]')
+@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications')
 def app_index() -> rx.Component:
     return rx.vstack(
         navbar("环境管理->中间件管理"),
@@ -30,7 +30,7 @@ def _show_applications(app: Applications):
         rx.table.row_header_cell(
             rx.link(
                 app.name,
-                href=f"/namespaces/{app.namespace}/applications/{app.name}",
+                href=f"/clusters/{ApplicationsState.get_cluster_name}/templates/{ApplicationsState.get_template_name}/applicationsets/{ApplicationsState.get_appset_name}/applications/{app.name}",
                 on_click=PodsState.list_pods_by_app(app.namespace, app.name)
             )
         ),

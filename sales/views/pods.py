@@ -5,7 +5,7 @@ from sales.backend.pods import PodsState
 from sales.backend.models import Pods
 
 
-@rx.page(route='/namespaces/[app_namespace]/applications/[app_name]')
+@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications/[app_name]')
 def pod_index() -> rx.Component:
     return rx.vstack(
         navbar("环境管理->Pod 管理"),

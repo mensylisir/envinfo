@@ -5,11 +5,9 @@ from sales.response.http_response import HttpResponse
 import aiohttp
 import base64
 from sales.utils.json import json_to_object
+from sales.config.config import wrapped_config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-headers = {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InZBWUppaENWVWVRcWN0Ykw5ZHhBSGktRE5ndnFTNk5UZ0xiLWtlWFM5eVUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJ0YWljaHUtYWRtaW4iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoidGFpY2h1LWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiODVmYWNmMGUtMTg4MC00NDc5LTkwNWQtNzQyNTEyZjQ0MjM1Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOnRhaWNodS1hZG1pbiJ9.AycjOnhp2_7DweD6tqmD5PkWzs1Gl0_1af1uBdbcFnWcb6bP5BYaaqScntGQ4GXmfuXzJe2xkH2nVDUJDhNv8dEvcliHoAidRYY69A4OqopN75HZZp_nqoK_jXyRfFbs9AdrCkjJ3mL6NPkh_3sastGFas6-vpNZq1TPGqc8OJmKYDPCqwBahAWywp40nqOA7tcfDOKervGEZEWlMIncFGPM0H8Nv1DbywEEERE9eDw1zLfPBJ4aStgimGRRO0cC8mHU0mvt5ogZnhvkQvw9wgz6w5EgqmEujAMZGoWIWklG0lge8f0Xz3U0wgjIxkISzl38XHvDtAJQEWULogJVfA"
-}
+
 
 class UserInfo:
     user: str
@@ -19,7 +17,7 @@ class UserInfo:
         self.user = "-"
         self.password = "-"
 
-async def get_secret(namespace: str, instance_name: str):
+async def get_secret(cluster_name: str, namespace: str, instance_name: str):
     info = get_relation_info(instance_name)
     userInfo = UserInfo()
     if info["secret"] == "":
@@ -34,8 +32,13 @@ async def get_secret(namespace: str, instance_name: str):
     elif info["secret"].startswith("-"):
         secret_name = f'{namespace}{info["secret"]}'
     else:
-        secret_name = info["secret"]  # 修正为字符串
-    url = f"https://172.30.1.12:6443/api/v1/namespaces/{namespace}/secrets/{secret_name}"
+        secret_name = info["secret"]
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+    }
+    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/api/v1/namespaces/{namespace}/secrets/{secret_name}"
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers, ssl=False) as response:

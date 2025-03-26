@@ -6,12 +6,18 @@ import reflex as rx
 from .models import Template
 from sales.template.manager import template_manager
 from sales.utils.json import json_to_object
+from sales.config.config import CLUSTER_CONFIG
 
 class TemplateState(rx.State):
     """The app state."""
 
     current_template: Template = Template()
     templates: list[Template] = []
+
+    @rx.var
+    def get_cluster_name(self) -> str:
+        return self.router.page.params.get("cluster_name", "")
+
     def load_entries(self):
         self.get_templates()
 

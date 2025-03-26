@@ -6,7 +6,7 @@ from ..backend.applicationsets import ApplicationSetsState
 from ..backend.applications import ApplicationsState
 
 
-@rx.page(route='/applicationsets/[template_name]')
+@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets')
 def appset_index() -> rx.Component:
     return rx.vstack(
         navbar("环境管理->实例管理"),
@@ -41,7 +41,8 @@ def _show_applicationsets(appset: ApplicationSets):
                             color_scheme="blue",
                             on_click=ApplicationsState.list_applications_by_appset(appset.name)
                         ),
-                        href=f"/applications/{appset.name}",
+                        # href=f"/applications/{appset.name}",
+                        href=f"/clusters/{ApplicationSetsState.get_cluster_name}/templates/{ApplicationsState.get_template_name}/applicationsets/{appset.name}/applications"
                     ),
                 ),
             ),
