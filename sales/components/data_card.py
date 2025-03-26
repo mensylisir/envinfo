@@ -13,9 +13,9 @@ def data_card(title: str, description: str, action: str, action_link: str, actio
                 on_click=action_on_click,
                 href=action_link
             ),
-            spacing="1em"
+            spacing="1"
         ),
-        variant="outlined",
+        variant="surface",
         width="100%",
         padding="1em"
     )
