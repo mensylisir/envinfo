@@ -1,12 +1,12 @@
 import reflex as rx
-from sales.views.navbar import navbar
+from envinfo.views.navbar import navbar
 from ..components.header_cell import header_cell
 from ..backend.applications import ApplicationsState
 from ..backend.models import Applications
-from sales.backend.pods import PodsState
+from envinfo.backend.pods import PodsState
 
 
-@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications')
+@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications', on_load=ApplicationsState.list_applications_by_appset)
 def app_index() -> rx.Component:
     return rx.vstack(
         navbar("环境管理->中间件管理"),
@@ -30,8 +30,8 @@ def _show_applications(app: Applications):
         rx.table.row_header_cell(
             rx.link(
                 app.name,
-                href=f"/clusters/{ApplicationsState.get_cluster_name}/templates/{ApplicationsState.get_template_name}/applicationsets/{ApplicationsState.get_appset_name}/applications/{app.name}",
-                on_click=PodsState.list_pods_by_app(app.namespace, app.name)
+                href=f"/clusters/{ApplicationsState.get_cluster_name}/templates/{ApplicationsState.get_template_name}/applicationsets/{ApplicationsState.get_appset_name}/applications/{app.namespace}/{app.name}",
+                on_click=PodsState.list_pods_by_app()
             )
         ),
         rx.table.cell(

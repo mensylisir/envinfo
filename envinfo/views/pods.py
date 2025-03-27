@@ -1,11 +1,11 @@
 import reflex as rx
-from sales.views.navbar import navbar
-from sales.components.header_cell import header_cell
-from sales.backend.pods import PodsState
-from sales.backend.models import Pods
+from envinfo.views.navbar import navbar
+from envinfo.components.header_cell import header_cell
+from envinfo.backend.pods import PodsState
+from envinfo.backend.models import Pods
 
 
-@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications/[app_name]')
+@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications/[namespace]/[app_name]', on_load=PodsState.list_pods_by_app)
 def pod_index() -> rx.Component:
     return rx.vstack(
         navbar("环境管理->Pod 管理"),

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envinfo-deployment
+  labels:
+    app: envinfo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envinfo
+  template:
+    metadata:
+      labels:
+        app: envinfo
+    spec:
+      containers:
+      - name: envinfo-container
+        image: registry.dev.rdev.tech:18093/envinfo/envinfo:v2.3
+        ports:
+        - containerPort: 8000
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: envinfo-service
+  labels:
+    app: envinfo
+spec:
+  selector:
+    app: envinfo
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+    name: port-8000
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+    name: port-3000
+  type: LoadBalancer

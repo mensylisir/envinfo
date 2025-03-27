@@ -1,12 +1,12 @@
 import reflex as rx
 
 import asyncio
-from sales.appset.app import get_applications
-from sales.appset.app import get_applications_by_appset
-from sales.appset.service import get_service_url
-from sales.appset.secret import get_secret
-from sales.appset.monitor import get_monitor
-from sales.utils.json import json_to_object
+from envinfo.appset.app import get_applications
+from envinfo.appset.app import get_applications_by_appset
+from envinfo.appset.service import get_service_url
+from envinfo.appset.secret import get_secret
+from envinfo.appset.monitor import get_monitor
+from envinfo.utils.json import json_to_object
 from .models import Applications
 import pyperclip
 
@@ -51,8 +51,8 @@ class ApplicationsState(rx.State):
             application.action = "view"
             self.applications += [application]
 
-    async def list_applications_by_appset(self, appset):
-        result = get_applications_by_appset(self.get_cluster_name, appset)
+    async def list_applications_by_appset(self):
+        result = get_applications_by_appset(self.get_cluster_name, self.get_appset_name)
         data = json_to_object(result.data)
         self.applications = []
         tasks = []

@@ -1,12 +1,12 @@
 import reflex as rx
-from sales.views.navbar import navbar
+from envinfo.views.navbar import navbar
 from ..components.header_cell import header_cell
 from ..backend.models import ApplicationSets
 from ..backend.applicationsets import ApplicationSetsState
 from ..backend.applications import ApplicationsState
 
 
-@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets')
+@rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets', on_load=ApplicationSetsState.list_applicationsets_by_template)
 def appset_index() -> rx.Component:
     return rx.vstack(
         navbar("环境管理->实例管理"),
@@ -39,7 +39,8 @@ def _show_applicationsets(appset: ApplicationSets):
                             rx.icon("briefcase", size=18),
                             rx.text(appset.action),
                             color_scheme="blue",
-                            on_click=ApplicationsState.list_applications_by_appset(appset.name)
+                            # on_click=ApplicationsState.list_applications_by_appset(appset.name)
+                            on_click=ApplicationsState.list_applications_by_appset()
                         ),
                         # href=f"/applications/{appset.name}",
                         href=f"/clusters/{ApplicationSetsState.get_cluster_name}/templates/{ApplicationsState.get_template_name}/applicationsets/{appset.name}/applications"

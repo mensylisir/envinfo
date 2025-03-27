@@ -1,10 +1,10 @@
 import requests
 import urllib3
 
-from sales.response.http_response import HttpResponse
-from sales.config.config import wrapped_config
+from envinfo.response.http_response import HttpResponse
+from envinfo.config.config import wrapped_config
 import os
-from sales.utils.json import object_to_json
+from envinfo.utils.json import object_to_json
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_pods(cluster_name, namespace):

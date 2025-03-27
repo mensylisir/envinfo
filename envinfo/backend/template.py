@@ -4,9 +4,9 @@ import os
 import reflex as rx
 
 from .models import Template
-from sales.template.manager import template_manager
-from sales.utils.json import json_to_object
-from sales.config.config import CLUSTER_CONFIG
+from envinfo.template.manager import template_manager
+from envinfo.utils.json import json_to_object
+from envinfo.config.config import CLUSTER_CONFIG
 
 class TemplateState(rx.State):
     """The app state."""

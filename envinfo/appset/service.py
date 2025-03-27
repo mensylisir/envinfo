@@ -1,10 +1,10 @@
 import aiohttp
 import urllib3
 
-from sales.response.http_response import HttpResponse
-from sales.utils.relation import get_relation_info
-from sales.utils.json import json_to_object
-from sales.config.config import wrapped_config
+from envinfo.response.http_response import HttpResponse
+from envinfo.utils.relation import get_relation_info
+from envinfo.utils.json import json_to_object
+from envinfo.config.config import wrapped_config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class AccessUrl:

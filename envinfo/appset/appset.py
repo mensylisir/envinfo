@@ -1,9 +1,9 @@
 import requests
 import urllib3
-from sales.backend.template import TemplateState
+from envinfo.backend.template import TemplateState
 
-from sales.response.http_response import HttpResponse
-from sales.config.config import wrapped_config
+from envinfo.response.http_response import HttpResponse
+from envinfo.config.config import wrapped_config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_applicationsets(cluster_name):
