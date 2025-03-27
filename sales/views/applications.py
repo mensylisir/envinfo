@@ -99,14 +99,27 @@ def _show_applications(app: Applications):
         rx.table.cell(
             rx.dialog.root(
                 rx.dialog.trigger(
-                    rx.link(
-                        rx.button(
-                            rx.icon("briefcase", size=18),
-                            rx.text(app.action),
-                            color_scheme="blue",
+                    rx.cond(
+                        app.monitor + " " != " ",
+                        rx.link(
+                            rx.button(
+                                rx.icon("briefcase", size=18),
+                                rx.text(app.action),
+                                color_scheme="blue",
+                                disabled=False
+                            ),
+                            href=app.monitor
                         ),
-                        href=app.monitor
-                    )
+                        rx.link(
+                            rx.button(
+                                rx.icon("briefcase", size=18),
+                                rx.text(app.action),
+                                color_scheme="blue",
+                                disabled=True,
+                            ),
+                            href=""
+                        ),
+                    ),
                 ),
             ),
         ),
