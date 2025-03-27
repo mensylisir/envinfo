@@ -64,7 +64,7 @@ class ApplicationsState(rx.State):
             application.action = "view"
             namespace = item.spec.destination.namespace
             name = application.name
-            application.monitor = get_monitor(namespace, name)
+            application.monitor = get_monitor(self.get_cluster_name, namespace, name)
             service_task = get_service_url(self.get_cluster_name, namespace, name)
             secret_task = get_secret(self.get_cluster_name, namespace, name)
             tasks.append((application, service_task, secret_task))

@@ -6,7 +6,7 @@ service_relation = {
         "secret-password": "password",
         "user": "admin",
         "password": "",
-        "monitor": "http://172.30.1.12:32719/d/ArgoCD/argocd?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/ArgoCD/argocd?orgId=1&var-namespace={}",
     },
     "dbgate": {
         "service": "-dbgate-instance-dbgate",
@@ -14,7 +14,7 @@ service_relation = {
         "secret": "",
         "user": "postgres",
         "password": "Def@u1tpwd",
-        "monitor": "-",
+        "monitor": "",
     },
     "gitlab": {
         "service": "-gitlab-instance-webservice-default",
@@ -22,7 +22,7 @@ service_relation = {
         "secret-password": "password",
         "user": "root",
         "password": "",
-        "monitor": "http://172.30.1.12:32719/d/gitlab/gitlab?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/gitlab/gitlab?orgId=1&var-namespace={}",
     },
     "harbor": {
         "service": "-harbor-instance-portal",
@@ -30,7 +30,7 @@ service_relation = {
         "secret-password": "",
         "user": "admin",
         "password": "Harbor12345",
-        "monitor": "http://172.30.1.12:32719/d/Harbor/harbor_dashboard?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/Harbor/harbor_dashboard?orgId=1&var-namespace={}",
     },
     "jenkins": {
         "service": "-jenkins-instance",
@@ -38,7 +38,7 @@ service_relation = {
         "secret": "",
         "user": "admin",
         "password": "Def@u1tpwd",
-        "monitor": "http://172.30.1.12:32719/d/jenkins/jenkins?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/jenkins/jenkins?orgId=1&var-namespace={}",
     },
     "postgresql": {
         "service": "-postgresql-instance",
@@ -46,7 +46,7 @@ service_relation = {
         "secret-password": "postgres-password",
         "user": "postgres",
         "password": "",
-        "monitor": "http://172.30.1.12:32719/d/PostgreSQL/postgresql-database?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/PostgreSQL/postgresql-database?orgId=1&var-namespace={}",
     },
     "sonarqube": {
         "service": "-sonarqube-instance-sonarqube",
@@ -54,7 +54,7 @@ service_relation = {
         "secret-password": "",
         "user": "admin",
         "password": "Def@u1tpwd",
-        "monitor": "http://172.30.1.12:32719/d/sonarqube/sonarqube?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/sonarqube/sonarqube?orgId=1&var-namespace={}",
     },
     "grafana": {
         "service": "-grafana-instance",
@@ -62,7 +62,7 @@ service_relation = {
         "secret-password": "",
         "user": "admin",
         "password": "Def@u1tpwd",
-        "monitor": "-",
+        "monitor": "",
     },
     "minio": {
         "service": "minio-service",
@@ -70,7 +70,7 @@ service_relation = {
         "secret-password": "",
         "user": "admin",
         "password": "Def@u1tpwd",
-        "monitor": "http://172.30.1.12:32719/d/minio/minio?orgId=1&var-namespace={}",
+        "monitor": "http://{}/d/minio/minio?orgId=1&var-namespace={}",
     }
 }
 
