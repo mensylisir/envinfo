@@ -47,7 +47,7 @@ class ApplicationSetsState(rx.State):
             applicationset.name = item.metadata.name
             applicationset.alias_name = item.metadata.annotations["app.kubernetes.io/alias_name"]
             applicationset.description = item.metadata.annotations["app.kubernetes.io/description"]
-            applicationset.action = "view"
+            applicationset.action = "查看"
             self.applicationsets += [applicationset]
 
 
@@ -60,6 +60,6 @@ class ApplicationSetsState(rx.State):
             applicationset.name = item.metadata.name
             applicationset.alias_name = item.metadata.annotations["app.kubernetes.io/alias_name"]
             applicationset.description = item.metadata.annotations["app.kubernetes.io/description"]
-            applicationset.action = "view"
+            applicationset.action = "查看"
             self.applicationsets += [applicationset]
 

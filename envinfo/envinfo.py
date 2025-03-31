@@ -19,6 +19,8 @@ app = rx.App(
         appearance="light", has_background=True, radius="large", accent_color="blue"
     ),
 )
+app.api.add_api_route("/clusters/{cluster_name}/templates", TemplateState.get_templates)
+
 # app.add_page(
 #     template_index,
 #     route="/clusters/[cluster_name]/templates",

@@ -32,5 +32,5 @@ class TemplateState(rx.State):
             template.name = result.metadata.labels["app.kubernetes.io/from-template"]
             template.description = result.metadata.annotations["app.kubernetes.io/description"]
             template.alias_name = result.metadata.annotations["app.kubernetes.io/alias_name"]
-            template.action = "create"
+            template.action = "创建"
             self.templates += [template]

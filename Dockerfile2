@@ -1,14 +1,12 @@
-FROM python:3.12
 
-
+FROM python:3.13-slim  AS build
 ARG TARGETARCH
-
+RUN apt-get update && apt-get install -y unzip curl wget xz-utils xclip xvfb && rm -rf /var/lib/apt/lists/*
+ENV HTTPX_DISABLE_IPV6=1
 WORKDIR /app
 COPY . .
-
-RUN apt-get update && apt-get install -y unzip curl wget xz-utils xclip xvfb && rm -rf /var/lib/apt/lists/*
-RUN pip install -r requirements.txt
-
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
         wget https://nodejs.org/dist/v18.18.0/node-v18.18.0-linux-arm64.tar.xz && \
         tar -xJf node-v18.18.0-linux-arm64.tar.xz -C /usr/local --strip-components=1 && \
@@ -20,8 +18,10 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     fi
 
 RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:/usr/local/bin:$PATH"
-
-RUN Xvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99
-ENTRYPOINT ["sh", "-c", "Xvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99 && reflex run --env prod --backend-only --loglevel debug"]
-#ENTRYPOINT ["reflex", "run", "--env", "prod", "--backend-only", "--loglevel", "debug" ]
+ENV PATH="/root/.bun/bin:/usr/local/bin:/usr/bin:$PATH"
+EXPOSE 32227
+EXPOSE 3000
+ENV API_URL=http://localhost:32227
+RUN npm config set registry https://registry.npmmirror.com
+RUN reflex export --frontend-only --no-zip
+CMD ["reflex", "run", "--env", "prod"]

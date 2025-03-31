@@ -1,0 +1,15 @@
+services:
+  backend:
+    image: registry.dev.rdev.tech:18093/envinfo/envinfo-backend:v2.3.3
+    container_name: backend
+    ports:
+     - 8000:8000
+    depends_on:
+     - redis
+  frontend:
+    image: registry.dev.rdev.tech:18093/envinfo/envinfo-frontend:v2.3.3
+    container_name: frontend
+    ports:
+      - 3000:80
+    depends_on:
+      - backend

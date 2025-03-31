@@ -45,7 +45,7 @@ def _show_templates(tp: Template):
             rx.link(
                 rx.button(
                     rx.icon("briefcase", size=18),
-                    rx.text("view"),
+                    rx.text("查看"),
                     color_scheme="blue",
                     # on_click=ApplicationSetsState.list_applicationsets_by_template(tp),
                     on_click=ApplicationSetsState.list_applicationsets_by_template(),

@@ -30,8 +30,12 @@ class ApplicationsState(rx.State):
 
     @rx.event
     def copy_to_clipboard(self, text):
-        pyperclip.copy(text)
-        return rx.window_alert("已复制到剪贴板")
+        # pyperclip.copy(text)
+        # return rx.window_alert("已复制到剪贴板")
+        return [
+            rx.set_clipboard(text),
+            rx.window_alert("已复制到剪贴板")
+        ]
     @rx.event
     def toggle_password(self, app: Applications):
         for index, app_in_state in enumerate(self.applications):
@@ -48,7 +52,7 @@ class ApplicationsState(rx.State):
             application.name = item.metadata.name
             application.namespace = item.spec.destination.namespace
             application.description = ""
-            application.action = "view"
+            application.action = "查看"
             self.applications += [application]
 
     async def list_applications_by_appset(self):
@@ -61,7 +65,7 @@ class ApplicationsState(rx.State):
             application.name = item.metadata.name
             application.namespace = item.spec.destination.namespace
             application.description = ""
-            application.action = "view"
+            application.action = "查看"
             namespace = item.spec.destination.namespace
             name = application.name
             application.monitor = get_monitor(self.get_cluster_name, namespace, name)

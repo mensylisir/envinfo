@@ -2,7 +2,7 @@ FROM python:3.13-slim AS base
 
 ARG TARGETARCH
 
-RUN apt-get update && apt-get install -y unzip curl wget xz-utils && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y unzip curl wget xz-utils xclip xvfb && rm -rf /var/lib/apt/lists/*
 ENV HTTPX_DISABLE_IPV6=1
 WORKDIR /app
 COPY requirements.txt .
@@ -31,8 +31,11 @@ ENV API_URL=http://localhost:8000
 WORKDIR /app
 COPY --from=build /root/.bun /root/.bun
 COPY --from=build /usr/local /usr/local
+COPY --from=build /usr/bin/xclip /usr/bin/xclip
+COPY --from=build /usr/bin/Xvfb /usr/bin/Xvfb
 COPY --from=build /app /app
-ENV PATH="/root/.bun/bin:/usr/local/bin:$PATH"
+ENV PATH="/root/.bun/bin:/usr/local/bin:/usr/bin:$PATH"
 EXPOSE 8000
 EXPOSE 3000
-CMD ["reflex", "run", "--env", "prod"]
+#CMD ["reflex", "run", "--env", "prod"]
+CMD ["sh", "-c", "Xvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99 && reflex run --env prod"]

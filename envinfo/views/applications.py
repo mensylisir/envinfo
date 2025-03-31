@@ -66,8 +66,8 @@ def _show_applications(app: Applications):
                 rx.button(
                     rx.cond(
                         ~app.show_password,  # 使用位运算符取反
-                        rx.icon("eye", color="#777"),
-                        rx.icon("eye-off", color="#777")
+                        rx.icon("eye-off", color="#777"),
+                        rx.icon("eye", color="#777")
                     ),
                     on_click=lambda: ApplicationsState.toggle_password(app),
                     color_scheme="blue",

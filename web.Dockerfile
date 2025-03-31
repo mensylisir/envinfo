@@ -1,7 +1,7 @@
 FROM python:3.12 AS builder
 ARG TARGETARCH
 WORKDIR /app
-RUN apt-get update && apt-get install -y unzip curl wget xz-utils && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y unzip curl wget xz-utils xclip xvfb && rm -rf /var/lib/apt/lists/*
 
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
         wget https://nodejs.org/dist/v18.18.0/node-v18.18.0-linux-arm64.tar.xz && \
