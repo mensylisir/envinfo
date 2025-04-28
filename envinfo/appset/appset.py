@@ -6,12 +6,12 @@ from envinfo.response.http_response import HttpResponse
 from envinfo.config.config import wrapped_config
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def get_applicationsets(cluster_name):
+def get_applicationsets(token, endpoints):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
+    url = f"https://{endpoints}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
     try:
         with requests.get(url, headers=headers, verify=False) as response:
             response.raise_for_status()
@@ -28,12 +28,12 @@ def get_applicationsets(cluster_name):
                 message=str(e)
             )
 
-def get_applicationsets_by_template(cluster_name, template_name):
+def get_applicationsets_by_template(template_name, token, endpoints):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets?labelSelector=app.kubernetes.io/from-template%3D{template_name}"
+    url = f"https://{endpoints}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets?labelSelector=app.kubernetes.io/from-template%3D{template_name}"
     try:
         with requests.get(url, headers=headers, verify=False) as response:
             response.raise_for_status()
@@ -50,11 +50,11 @@ def get_applicationsets_by_template(cluster_name, template_name):
                 message=str(e)
             )
 
-def create_applicationset(cluster_name, data):
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
+def create_applicationset(data, token, endpoints):
+    url = f"https://{endpoints}/apis/argoproj.io/v1alpha1/namespaces/argocd-system/applicationsets"
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
     if isinstance(data, str):
         import json

@@ -12,8 +12,8 @@ service_relation = {
         "service": "-dbgate-instance-dbgate",
         "secret-password": "",
         "secret": "",
-        "user": "postgres",
-        "password": "Def@u1tpwd",
+        "user": "",
+        "password": "",
         "monitor": "",
     },
     "gitlab": {

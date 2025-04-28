@@ -1,4 +1,3 @@
-
 FROM python:3.13-slim  AS build
 ARG TARGETARCH
 RUN apt-get update && apt-get install -y unzip curl wget xz-utils xclip xvfb && rm -rf /var/lib/apt/lists/*

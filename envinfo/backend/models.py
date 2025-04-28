@@ -22,6 +22,10 @@ class ApplicationSets(rx.Base):
 class Applications(rx.Base):
     name: str = ""
     namespace: str = ""
+    type: str = ""
+    cluster_ip: str = ""
+    external_port: str = ""
+    port: str = ""
     address: str = ""
     username: str = ""
     password: str = ""

@@ -6,7 +6,6 @@ import reflex as rx
 from .models import Template
 from envinfo.template.manager import template_manager
 from envinfo.utils.json import json_to_object
-from envinfo.config.config import CLUSTER_CONFIG
 
 class TemplateState(rx.State):
     """The app state."""
@@ -23,6 +22,7 @@ class TemplateState(rx.State):
 
     def get_template(self, tp: Template):
         self.current_template = tp
+
 
     def get_templates(self):
         self.templates= []

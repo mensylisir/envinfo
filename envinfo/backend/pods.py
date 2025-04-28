@@ -5,7 +5,7 @@ from envinfo.appset.app import get_application_by_appname
 from envinfo.utils.json import json_to_object
 from .models import Pods
 from envinfo.backend.applications import ApplicationsState
-
+from envinfo.backend.auth import AuthState
 
 class PodsState(rx.State):
     pods: list[Pods] = []
@@ -30,8 +30,9 @@ class PodsState(rx.State):
     def get_namespace(self) -> str:
         return self.router.page.params.get("namespace", "")
 
-    def list_pods(self):
-        result = get_pods(self.get_cluster_name, self.get_namespace)
+    async def list_pods(self):
+        auth_state = await self.get_state(AuthState)
+        result = get_pods(self.get_namespace, auth_state.token, auth_state.endpoints)
         data = json_to_object(result.data)
         self.pods = []
         for item in data.items:
@@ -41,8 +42,9 @@ class PodsState(rx.State):
             pod.namespace = item.metadata.namespace
             self.pods += [pod]
 
-    def list_pods_by_app(self):
-        result = get_pods(self.get_cluster_name, self.get_namespace)
+    async def list_pods_by_app(self):
+        auth_state = await self.get_state(AuthState)
+        result = get_pods(self.get_namespace, auth_state.token, auth_state.endpoints)
         data = json_to_object(result.data)
         self.pods = []
         for item in data.items:

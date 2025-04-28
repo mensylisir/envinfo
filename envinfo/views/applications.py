@@ -9,7 +9,7 @@ from envinfo.backend.pods import PodsState
 @rx.page(route='/clusters/[cluster_name]/templates/[template_name]/applicationsets/[appset_name]/applications', on_load=ApplicationsState.list_applications_by_appset)
 def app_index() -> rx.Component:
     return rx.vstack(
-        navbar("环境管理->中间件管理"),
+        navbar("环境管理->组件管理"),
         rx.flex(
             rx.box(main_table(), width=["100%", "100%", "100%", "100%"]),
             # email_gen_ui(),
@@ -39,61 +39,65 @@ def _show_applications(app: Applications):
         ),
         rx.table.cell(app.username),
         rx.table.cell(
-            rx.hstack(
-                rx.cond(
-                    ~app.show_password,
-                    rx.input(
-                        type="password",
-                        value=app.password,
-                        disabled=True,
-                        style={
-                            "width": "200px",
-                            "padding-right": "3em",
-                            "boxSizing": "border-box",
-                        },
-                    ),
-                    rx.input(
-                        type="text",
-                        value=app.password,
-                        disabled=True,
-                        style={
-                            "width": "200px",
-                            "padding-right": "3em",
-                            "boxSizing": "border-box",
-                        },
-                    )
-                ),
-                rx.button(
+            rx.cond(
+                app.username != "",
+                rx.hstack(
                     rx.cond(
-                        ~app.show_password,  # 使用位运算符取反
-                        rx.icon("eye-off", color="#777"),
-                        rx.icon("eye", color="#777")
+                        ~app.show_password,
+                        rx.input(
+                            type="password",
+                            value=app.password,
+                            disabled=True,
+                            style={
+                                "width": "200px",
+                                "padding-right": "3em",
+                                "boxSizing": "border-box",
+                            },
+                        ),
+                        rx.input(
+                            type="text",
+                            value=app.password,
+                            disabled=True,
+                            style={
+                                "width": "200px",
+                                "padding-right": "3em",
+                                "boxSizing": "border-box",
+                            },
+                        )
                     ),
-                    on_click=lambda: ApplicationsState.toggle_password(app),
-                    color_scheme="blue",
+                    rx.button(
+                        rx.cond(
+                            ~app.show_password,  # 使用位运算符取反
+                            rx.icon("eye-off", color="#777"),
+                            rx.icon("eye", color="#777")
+                        ),
+                        on_click=lambda: ApplicationsState.toggle_password(app),
+                        color_scheme="blue",
+                        style={
+                            "border": "none",
+                            "padding": "0.2em",
+                            "background": "none",
+                        },
+                    ),
+                    # rx.button(
+                    #     rx.icon("copy", color="#777"),
+                    #     on_click=lambda: ApplicationsState.copy_to_clipboard(app.password),
+                    #     style={
+                    #         "border": "none",
+                    #         "padding": "0.2em",
+                    #         "background": "none",
+                    #     },
+                    # ),
                     style={
-                        "border": "none",
+                        "position": "relative",
+                        "border": "0px solid #ccc",
+                        "border_radius": "4px",
+                        "align_items": "center",
                         "padding": "0.2em",
-                        "background": "none",
-                    },
+                        "width": "auto",
+                    }
                 ),
-                rx.button(
-                    rx.icon("copy", color="#777"),
-                    on_click=lambda: ApplicationsState.copy_to_clipboard(app.password),
-                    style={
-                        "border": "none",
-                        "padding": "0.2em",
-                        "background": "none",
-                    },
-                ),
-                style={
-                    "position": "relative",
-                    "border": "0px solid #ccc",
-                    "border_radius": "4px",
-                    "align_items": "center",
-                    "padding": "0.2em",
-                    "width": "auto",
-                }
+                rx.box()
             )
         ),
         rx.table.cell(

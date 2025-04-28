@@ -17,7 +17,7 @@ class UserInfo:
         self.user = "-"
         self.password = "-"
 
-async def get_secret(cluster_name: str, namespace: str, instance_name: str):
+async def get_secret(namespace: str, instance_name: str, token: str, endpoints: str):
     info = get_relation_info(instance_name)
     userInfo = UserInfo()
     if info["secret"] == "":
@@ -36,9 +36,9 @@ async def get_secret(cluster_name: str, namespace: str, instance_name: str):
 
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/api/v1/namespaces/{namespace}/secrets/{secret_name}"
+    url = f"https://{endpoints}/api/v1/namespaces/{namespace}/secrets/{secret_name}"
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers, ssl=False) as response:

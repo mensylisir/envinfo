@@ -7,12 +7,12 @@ import os
 from envinfo.utils.json import object_to_json
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def get_pods(cluster_name, namespace):
+def get_pods(namespace, token, endpoints):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/api/v1/namespaces/{namespace}/pods"
+    url = f"https://{endpoints}/api/v1/namespaces/{namespace}/pods"
     try:
         response = requests.get(url, headers=headers, verify=False)
         response.raise_for_status()
@@ -29,12 +29,12 @@ def get_pods(cluster_name, namespace):
             message=str(e)
         )
 
-def get_pod_logs(cluster_name, namespace, pod_name):
+def get_pod_logs(cluster_name, namespace, pod_name, token, endpoints):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/api/v1/namespaces/{namespace}/pods/{pod_name}/log"
+    url = f"https://{endpoints}/api/v1/namespaces/{namespace}/pods/{pod_name}/log"
     try:
         response = requests.get(url, headers=headers, verify=False)
         response.raise_for_status()

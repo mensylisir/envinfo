@@ -6,10 +6,27 @@ from ..backend.applicationsets import ApplicationSetsState
 from ..components.form_field import form_field
 from ..components.header_cell import header_cell
 from .navbar import navbar
+from envinfo.backend.auth import AuthState
 
-@rx.page("/clusters/[cluster_name]/templates", on_load=TemplateState.load_entries)
+@rx.page("/clusters/[cluster_name]/templates", on_load=[
+        rx.call_script('localStorage.getItem("authstate.token")', callback=AuthState.set_token),
+        rx.call_script('localStorage.getItem("authstate.endpoints")', callback=AuthState.set_endpoints),
+        TemplateState.load_entries])
 def template_index() -> rx.Component:
     return rx.vstack(
+        rx.script(
+            """
+            window.addEventListener("message", function(event) {
+                console.log("收到postMessage:", event);
+                if (event.data.token) {
+                    localStorage.setItem("authstate.token", event.data.token);
+                }
+                if (event.data.endpoints) {
+                    localStorage.setItem("authstate.endpoints", event.data.endpoints);
+                }
+            });
+            """
+        ),
         navbar("环境管理->模板管理"),
         rx.flex(
             rx.box(main_table(), width=["100%", "100%", "100%", "100%"]),
@@ -24,6 +41,9 @@ def template_index() -> rx.Component:
         padding_x=["1.5em", "1.5em", "3em"],
         padding_y=["1em", "1em", "2em"],
     )
+
+
+
 def _show_templates(tp: Template):
     return rx.table.row(
         rx.table.row_header_cell(tp.alias_name),
@@ -45,7 +65,7 @@ def _show_templates(tp: Template):
             rx.link(
                 rx.button(
                     rx.icon("briefcase", size=18),
-                    rx.text("查看"),
+                    rx.text("查看实例"),
                     color_scheme="blue",
                     # on_click=ApplicationSetsState.list_applicationsets_by_template(tp),
                     on_click=ApplicationSetsState.list_applicationsets_by_template(),

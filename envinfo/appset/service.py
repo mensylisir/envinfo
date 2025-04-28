@@ -12,20 +12,26 @@ class AccessUrl:
         self.name = None
         self.ip = None
         self.port = None
+        self.type = None
+        self.external_port = None
 
     def default(self):
         self.name = "-"
         self.ip = "-"
         self.port = "-"
+        self.type = "-"
+        self.external_port = "-"
 
     def __str__(self):
         name_str = self.name if self.name else "None"
         ip_str = self.ip if self.ip else "None"
         port_str = self.port if self.port else "None"
-        return f"AccessUrl(name={name_str}, ip={ip_str}, port={port_str})"
+        type_str = self.type if self.type else "None"
+        ext_port_str = self.external_port if self.external_port else "None"
+        return f"AccessUrl(name={name_str}, ip={ip_str}, port={port_str})," f"type={type_str}, external_port={ext_port_str})"
 
 
-async def get_service_url(cluster_name: str, namespace: str, instance_name: str):
+async def get_service_url(namespace: str, instance_name: str, token: str, endpoints: str):
     info = get_relation_info(instance_name)
     if info["service"].startswith("-"):
         service_name = f'{namespace}{info["service"]}'
@@ -34,9 +40,9 @@ async def get_service_url(cluster_name: str, namespace: str, instance_name: str)
 
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {wrapped_config[cluster_name].kubernetes.headers["Authorization"]}',
+        'Authorization': f'Bearer {token}',
     }
-    url = f"https://{wrapped_config[cluster_name].kubernetes.ip}:{wrapped_config[cluster_name].kubernetes.port}/api/v1/namespaces/{namespace}/services/{service_name}"
+    url = f"https://{endpoints}/api/v1/namespaces/{namespace}/services/{service_name}"
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers, ssl=False) as response:
@@ -46,6 +52,9 @@ async def get_service_url(cluster_name: str, namespace: str, instance_name: str)
                 acessUrls = []
                 for res in response.spec.ports:
                     accessUrl = AccessUrl()
+                    accessUrl.type = response.spec.type
+                    if accessUrl.type == "NodePort" or accessUrl.type == "LoadBalancer":
+                        accessUrl.external_port = res.nodePort
                     if hasattr(res, 'name') and res.name != None:
                         accessUrl.name = res.name
                     else:
