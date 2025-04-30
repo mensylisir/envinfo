@@ -70,7 +70,10 @@ class ApplicationsState(rx.State):
             application.action = "查看监控"
             namespace = item.spec.destination.namespace
             name = application.name
-            application.monitor = get_monitor(self.get_cluster_name, namespace, name)
+            nodeip = auth_state.endpoints.split(":")[0]
+            grafana_url = f"{nodeip}:{auth_state.grafana_nodeport}"
+            # print(f"grafana_url: {grafana_url}")
+            application.monitor = get_monitor(grafana_url, namespace, name)
             service_task = get_service_url(namespace, name, auth_state.token, auth_state.endpoints)
             secret_task = get_secret(namespace, name, auth_state.token, auth_state.endpoints)
             tasks.append((application, service_task, secret_task))
