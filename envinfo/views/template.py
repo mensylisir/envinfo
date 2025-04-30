@@ -11,7 +11,7 @@ from envinfo.backend.auth import AuthState
 @rx.page("/clusters/[cluster_name]/templates", on_load=[
         rx.call_script('localStorage.getItem("authstate.token")', callback=AuthState.set_token),
         rx.call_script('localStorage.getItem("authstate.endpoints")', callback=AuthState.set_endpoints),
-        rx.call_script('localStorage.getItem("authstate.grafana_nodeport")', callback=AuthState.set_grafana_nodeport()),
+        rx.call_script('localStorage.getItem("authstate.grafana_nodeport")', callback=AuthState.set_grafana_nodeport),
         TemplateState.load_entries])
 def template_index() -> rx.Component:
     return rx.vstack(
